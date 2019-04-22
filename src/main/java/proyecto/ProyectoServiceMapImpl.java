@@ -39,8 +39,8 @@ public class ProyectoServiceMapImpl implements ProyectoService {
             if (proyecto.getTitulo() != null) {
                 proyectoEditar.setTitulo(proyecto.getTitulo());
             }
-            if (proyecto.getUsuario() != null) {
-                proyectoEditar.setUsuario(proyecto.getUsuario());
+            if (proyecto.getPropietario() != null) {
+                proyectoEditar.setPropietario(proyecto.getPropietario());
             }
             return proyectoEditar;
         } catch (Exception exception) {

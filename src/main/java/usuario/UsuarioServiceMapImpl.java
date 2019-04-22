@@ -47,6 +47,7 @@ public class UsuarioServiceMapImpl implements UsuarioService {
 
     @Override
     public void deleteUsuario(String id) {
+
         usuarioMap.remove(id);
     }
 

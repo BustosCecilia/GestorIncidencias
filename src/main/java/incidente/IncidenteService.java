@@ -8,11 +8,11 @@ public interface IncidenteService {
 
     Collection<Incidente> getIncidentes(); //Preguntar q es esto y q tiene q ver con spark
 
-    Incidente getIncidente(int id);
+    Incidente getIncidente(String id);
 
     Incidente modifyIncidente(Incidente incidente) throws IncidenteException;
 
-    void deleteIncidente(int id);
+    void deleteIncidente(String id);
 
-    boolean existIncidente(int id);
+    boolean existIncidente(String id);
 }

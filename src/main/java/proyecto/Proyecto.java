@@ -1,20 +1,23 @@
 package proyecto;
 
+import incidente.Incidente;
 import usuario.Usuario;
 
 public class Proyecto {
     private String id;
     private String titulo;
-    private Usuario usuario;
+    private Usuario propietario;
 
     public Proyecto() {
     }
 
-    public Proyecto(String id, String titulo, Usuario usuario) {
+    public Proyecto(String id, String titulo, Usuario propietario) {
         this.id = id;
         this.titulo = titulo;
-        this.usuario = usuario;
+        this.propietario = propietario;
+
     }
+
 
     public String getId() {
         return id;
@@ -32,11 +35,11 @@ public class Proyecto {
         this.titulo = titulo;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
+    public Usuario getPropietario() {
+        return propietario;
     }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setPropietario(Usuario propietario) {
+        this.propietario = propietario;
     }
 }
