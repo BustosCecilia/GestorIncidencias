@@ -1,6 +1,8 @@
 package incidente;
 
 
+import enums.Estado;
+
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -32,14 +34,15 @@ public class IncidenteServiceMapImpl implements IncidenteService {
             if (incidente.getId() == null) {
                 throw new IncidenteException("El id de proyecto no puede ser nulo");
             }
-            Incidente incidenteEditar = incidenteMap.get(incidente.getId());
+            Incidente incidenteaEditar = incidenteMap.get(incidente.getId());
             if (incidente.getDescripcion() != null) {
-                incidenteEditar.setDescripcion(incidente.getDescripcion());
+                String textoAnadido= incidenteaEditar.getDescripcion()+" "+incidente.getDescripcion();
+                incidenteaEditar.setDescripcion(textoAnadido);
             }
-            if (incidente.getClasificacion() != null) {
-                incidenteEditar.setClasificacion(incidente.getClasificacion());
+            if (incidente.getEstado() != null && incidente.getEstado()== Estado.RESUELTO) {
+                incidenteaEditar.setEstado(incidente.getEstado());
             }
-            return incidenteEditar;
+            return incidenteaEditar;
         } catch (Exception exception) {
             throw new IncidenteException(exception.getMessage());
         }
