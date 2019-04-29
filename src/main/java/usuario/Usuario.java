@@ -12,6 +12,8 @@ public class Usuario {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
+
+
     }
 
     public String getId() {
@@ -37,4 +39,5 @@ public class Usuario {
     public void setApellido(String apellido) {
         this.apellido = apellido;
     }
+
 }

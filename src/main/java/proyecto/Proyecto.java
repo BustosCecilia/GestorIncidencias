@@ -1,6 +1,5 @@
 package proyecto;
 
-import incidente.Incidente;
 import usuario.Usuario;
 
 public class Proyecto {
@@ -17,7 +16,6 @@ public class Proyecto {
         this.propietario = propietario;
 
     }
-
 
     public String getId() {
         return id;
@@ -42,4 +40,5 @@ public class Proyecto {
     public void setPropietario(Usuario propietario) {
         this.propietario = propietario;
     }
+
 }

@@ -29,11 +29,11 @@ public class SparkRest {
         final UsuarioService usuarioService = new UsuarioServiceMapImpl();
         final ProyectoService proyectoService = new ProyectoServiceMapImpl();
 
-        port(8087);
+        port(4567);
         /** metodos que carga datos en memoria */
         cargarDatos(incidenteService, usuarioService, proyectoService);
 
-        /** servicios asociados a Usuario */
+        /** metodos asociados a Usuario *******************************************************************************/
 
         post("/usuario", (request, response) -> {
             response.type("application/json");
@@ -91,7 +91,8 @@ public class SparkRest {
             int cantidadIncidentes = incidenteService.getIncidentes().size();
             if (usuarioService.existUsuario(request.params(":id"))) {
                 for (int i = 1; i <= cantidadIncidentes; i++) {
-                    if (usuarioService.getUsuario(request.params(":id")) == incidenteService.getIncidente(String.valueOf(i)).getReportador()) {
+                    if (usuarioService.getUsuario(request.params(":id")) == incidenteService.
+                            getIncidente(String.valueOf(i)).getReportador()) {
                         listIncidentes.add(incidenteService.getIncidente(String.valueOf(i)));
                     }
                 }
@@ -150,20 +151,20 @@ public class SparkRest {
             int cantidadProyectos = proyectoService.getProyectos().size();
             int cantidadIncidentes = incidenteService.getIncidentes().size();
             for (int i = 1; i <= cantidadProyectos; i++) {
-                if (usuarioService.getUsuario(request.params(":id")) == proyectoService.getProyecto(String.valueOf(i)).
-                        getPropietario()) {
+                if (usuarioService.getUsuario(request.params(":id")) == proyectoService.
+                        getProyecto(String.valueOf(i)).getPropietario()) {
                     return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
                             "usuario es propietario del proyecto id="+i));
                 }
             }
             for (int i = 1; i <= cantidadIncidentes; i++) {
-                if (usuarioService.getUsuario(request.params(":id")) == incidenteService.getIncidente(String.valueOf(i)).
-                        getReportador()) {
+                if (usuarioService.getUsuario(request.params(":id")) == incidenteService.
+                        getIncidente(String.valueOf(i)).getReportador()) {
                     return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
                             "usuario es Reportador del proyecto id=" + i));
                 } else {
-                    if (usuarioService.getUsuario(request.params(":id")) == incidenteService.getIncidente(String.valueOf(i)).
-                            getResponsable()) {
+                    if (usuarioService.getUsuario(request.params(":id")) == incidenteService.
+                            getIncidente(String.valueOf(i)).getResponsable()) {
                         return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
                                 "usuario es Responsable del proyecto id=" + i));
                     }
@@ -182,7 +183,8 @@ public class SparkRest {
                             "El usuario existe." : "El usuario no existe")));
         }));
 
-        /** metodos asociado a Proyectos */
+        /** metodos asociado a Proyectos ******************************************************************************/
+
         post("/proyecto", (request, response) -> {
             response.type("application/json");
             Proyecto proyecto = new Gson().fromJson(request.body(), Proyecto.class);
@@ -245,8 +247,8 @@ public class SparkRest {
             response.type("application/json");
             int cantidadIncidentes = incidenteService.getIncidentes().size();
             for (int i = 1; i <= cantidadIncidentes; i++) {
-                if (proyectoService.getProyecto(request.params(":id")) == incidenteService.getIncidente(String.valueOf(i))
-                        .getProyecto()) {
+                if (proyectoService.getProyecto(request.params(":id")) == incidenteService.
+                        getIncidente(String.valueOf(i)).getProyecto()) {
                     return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
                             "proyecto tiene incidentes reportados"));
                 }
@@ -262,7 +264,7 @@ public class SparkRest {
                             "El proyecto existe." : "El proyecto no existe")));
         }));
 
-        /** metodos asociados a Incidentes*/
+        /** metodos asociados a Incidentes*****************************************************************************/
 
         post("/incidente", (request, response) -> {
             response.type("application/json");
@@ -376,9 +378,9 @@ public class SparkRest {
         Date dateCreacion = d.parse("31-03-2016");
         Date dateSolucion = d.parse("04-04-2016");
 
-        Incidente incidente = new Incidente("1", Clasificacion.CRITICO, "se perdieron datos", usuario2, usuario1,
+        Incidente incidente = new Incidente("1", Clasificacion.CRITICO, "se perdieron datos", usuario, usuario1,
                 dateCreacion, dateSolucion, proyecto, Estado.RESUELTO);
-        Incidente incident1 = new Incidente("2", Clasificacion.MENOR, "mejorar solucion", usuario, usuario,
+        Incidente incident1 = new Incidente("2", Clasificacion.MENOR, "mejorar solucion", usuario, usuario2,
                 dateCreacion, dateSolucion, proyecto, Estado.ASIGNADO);
 
         incidenteService.addIncidente(incidente);

@@ -1,6 +1,7 @@
 package incidente;
 
 import enums.Clasificacion;
+import enums.Estado;
 import proyecto.Proyecto;
 import usuario.Usuario;
 
@@ -15,12 +16,13 @@ public class Incidente {
     private Date dateCreacion;
     private Date dateSolucion;
     private Proyecto proyecto;
+    private Estado estado;
 
     public Incidente() {
     }
 
-    public Incidente(String id, Clasificacion clasificacion, String descripcion, Usuario reportador,
-                     Usuario responsable, Date dateCreacion, Date dateSolucion, Proyecto proyecto) {
+    public Incidente(String id, Clasificacion clasificacion, String descripcion, Usuario reportador, Usuario responsable,
+                     Date dateCreacion, Date dateSolucion, Proyecto proyecto, Estado estado) {
         this.id = id;
         this.clasificacion = clasificacion;
         this.descripcion = descripcion;
@@ -29,6 +31,7 @@ public class Incidente {
         this.dateCreacion = dateCreacion;
         this.dateSolucion = dateSolucion;
         this.proyecto = proyecto;
+        this.estado = estado;
     }
 
     public String getId() {
@@ -94,4 +97,14 @@ public class Incidente {
     public void setProyecto(Proyecto proyecto) {
         this.proyecto = proyecto;
     }
+
+    public Estado getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+    }
+
+
 }
