@@ -17,7 +17,9 @@ import usuario.UsuarioServiceMapImpl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static spark.Spark.*;
 public class SparkRest {
@@ -32,6 +34,7 @@ public class SparkRest {
         cargarDatos(incidenteService, usuarioService, proyectoService);
 
         /** servicios asociados a Usuario */
+
         post("/usuario", (request, response) -> {
             response.type("application/json");
             Usuario usuario = new Gson().fromJson(request.body(), Usuario.class);
@@ -51,6 +54,84 @@ public class SparkRest {
                     new Gson().toJsonTree(usuarioService.getUsuario(request.params(":id")))));
         }));
 
+        /*
+         * metodo get que me devuelve todos los proyectos que un usuario es propietario
+         */
+
+        get("/usuario/:id/proyectos", (request, response) -> {
+            response.type("application/json");
+            List<Proyecto> listProyectos = new ArrayList<>();
+            int cantidadProyectos = proyectoService.getProyectos().size();
+            if (usuarioService.existUsuario(request.params(":id"))) {
+                for (int i = 1; i <= cantidadProyectos; i++) {
+                    if (usuarioService.getUsuario(request.params(":id")) == proyectoService.getProyecto(String.valueOf(i)).
+                            getPropietario()) {
+                        listProyectos.add(proyectoService.getProyecto(String.valueOf(i)));
+                    }
+                }
+                if (listProyectos.isEmpty()) {
+                    return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
+                            "No es propietario de ningun proyecto"));
+                }
+                return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
+                        new Gson().toJsonTree(listProyectos)));
+            } else {
+                return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
+                        "Usuario no existe"));
+            }
+        });
+
+        /*
+         * metodo get que me devuelve  todos los incidentes asignados a un usuario
+         */
+
+        get("/usuario/:id/incidentesReportados", (request, response) -> {
+            response.type("application/json");
+            List<Incidente> listIncidentes = new ArrayList<>();
+            int cantidadIncidentes = incidenteService.getIncidentes().size();
+            if (usuarioService.existUsuario(request.params(":id"))) {
+                for (int i = 1; i <= cantidadIncidentes; i++) {
+                    if (usuarioService.getUsuario(request.params(":id")) == incidenteService.getIncidente(String.valueOf(i)).getReportador()) {
+                        listIncidentes.add(incidenteService.getIncidente(String.valueOf(i)));
+                    }
+                }
+                if (listIncidentes.isEmpty()) {
+                    return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
+                            "No es creador de ningun Incidente"));
+                }
+                return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
+                        new Gson().toJsonTree(listIncidentes)));
+            } else {
+                return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
+                        "Usuario no existe"));
+            }
+        });
+        /*
+         * metodo get que me devuelve  todos los incidentes asignados a un usuario
+         */
+
+        get("/usuario/:id/incidentesResponsable", (request, response) -> {
+            response.type("application/json");
+            List<Incidente> listIncidentes = new ArrayList<>();
+            int cantidadIncidentes = incidenteService.getIncidentes().size();
+            if (usuarioService.existUsuario(request.params(":id"))) {
+                for (int i = 1; i <= cantidadIncidentes; i++) {
+                    if (usuarioService.getUsuario(request.params(":id")) == incidenteService.
+                            getIncidente(String.valueOf(i)).getResponsable()) {
+                        listIncidentes.add(incidenteService.getIncidente(String.valueOf(i)));
+                    }
+                }
+                if (listIncidentes.isEmpty()) {
+                    return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
+                            "No tiene ningun incidente asignado"));
+                }
+                return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
+                        new Gson().toJsonTree(listIncidentes)));
+            } else {
+                return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
+                        "Usuario no existe"));
+            }
+        });
         put("/usuario/", (request, response) -> { // meter esto en un try catch
             response.type("application/json");
             Usuario usuario = new Gson().fromJson(request.body(), Usuario.class);
@@ -68,7 +149,7 @@ public class SparkRest {
             response.type("application/json");
             int cantidadProyectos = proyectoService.getProyectos().size();
             int cantidadIncidentes = incidenteService.getIncidentes().size();
-            for(int i = 1; i<=cantidadProyectos; i++){
+            for (int i = 1; i <= cantidadProyectos; i++) {
                 if (usuarioService.getUsuario(request.params(":id")) == proyectoService.getProyecto(String.valueOf(i)).
                         getPropietario()) {
                     return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
@@ -121,6 +202,32 @@ public class SparkRest {
                     new Gson().toJsonTree(proyectoService.getProyecto(request.params(":id")))));
         }));
 
+        /*
+         * metodo get que me devuelve  todos los incidentes asociados a un proyecto
+         */
+
+        get("/proyecto/:id/incidentes", (request, response) -> {
+            response.type("application/json");
+            List<Incidente> listIncidentes = new ArrayList<>();
+            int cantidadIncidentes = incidenteService.getIncidentes().size();
+            if (proyectoService.existProyecto(request.params(":id"))) {
+                for (int i = 1; i <= cantidadIncidentes; i++) {
+                    if (proyectoService.getProyecto(request.params(":id")) == incidenteService.
+                            getIncidente(String.valueOf(i)).getProyecto()) {
+                        listIncidentes.add(incidenteService.getIncidente(String.valueOf(i)));
+                    }
+                }
+                if (listIncidentes.isEmpty()) {
+                    return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
+                            "No tiene ningun incidente asignado"));
+                }
+                return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
+                        new Gson().toJsonTree(listIncidentes)));
+            } else {
+                return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
+                        "Proyecto no existe"));
+            }
+        });
         put("/proyecto/", (request, response) -> { // meter esto en un try catch
             response.type("application/json");
             Proyecto proyecto = new Gson().fromJson(request.body(), Proyecto.class);
@@ -156,6 +263,7 @@ public class SparkRest {
         }));
 
         /** metodos asociados a Incidentes*/
+
         post("/incidente", (request, response) -> {
             response.type("application/json");
             Incidente incidente = new Gson().fromJson(request.body(), Incidente.class);
@@ -203,6 +311,49 @@ public class SparkRest {
                             "El proyecto existe." : "El proyecto no existe")));
         }));
 
+        /*
+         * metodo get que me devuelve  todos los incidentes abiertos o pendientes
+         */
+
+        get("/incidentes/abiertos", (request, response) -> {
+            response.type("application/json");
+            List<Incidente> listIncidentes = new ArrayList<>();
+            int cantidadIncidentes = incidenteService.getIncidentes().size();
+            for (int i = 1; i <= cantidadIncidentes; i++) {
+                if (incidenteService.getIncidente(String.valueOf(i)).getEstado() == Estado.ASIGNADO) {
+                    listIncidentes.add(incidenteService.getIncidente(String.valueOf(i)));
+                }
+            }
+            if (listIncidentes.isEmpty()) {
+                return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
+                        "No hay incidentes abiertos"));
+            }
+
+            return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS, new Gson().toJsonTree(listIncidentes)));
+
+        });
+
+        /*
+         * metodo get que me devuelve  todos los incidentes cerrado o resueltos
+         */
+
+        get("/incidentes/cerrados", (request, response) -> {
+            response.type("application/json");
+            List<Incidente> listIncidentes = new ArrayList<>();
+            int cantidadIncidentes = incidenteService.getIncidentes().size();
+            for (int i = 1; i <= cantidadIncidentes; i++) {
+                if (incidenteService.getIncidente(String.valueOf(i)).getEstado() == Estado.RESUELTO) {
+                    listIncidentes.add(incidenteService.getIncidente(String.valueOf(i)));
+                }
+            }
+            if (listIncidentes.isEmpty()) {
+                return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
+                        "No hay incidentes resueltos"));
+            }
+
+            return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS, new Gson().toJsonTree(listIncidentes)));
+
+        });
 
     }
 
@@ -232,6 +383,7 @@ public class SparkRest {
 
         incidenteService.addIncidente(incidente);
         incidenteService.addIncidente(incident1);
+
 
     }
 
